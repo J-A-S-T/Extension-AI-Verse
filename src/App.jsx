@@ -6,6 +6,12 @@ import './App.css'
 function App() {
   const [count, setCount] = useState(0)
 
+  const changeClick = ()=>{
+    chrome.runtime.sendMessage({
+      get: "Yes"
+    });
+  }
+
   return (
     <>
       <div>
@@ -18,7 +24,7 @@ function App() {
       </div>
       <h1>Vite + React</h1>
       <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
+        <button onClick={() => {changeClick()}}>
           count is {count}
           WOrld is good {import.meta.env.VITE_HELLO}
         </button>

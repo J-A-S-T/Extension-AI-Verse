@@ -11,7 +11,15 @@ export default defineConfig({
         {
           src: "manifest.json",
           dest: "",
-        }
+        },
+        {
+          src: "./scripts",
+          dest: "",
+        },
+        {
+          src: "./background",
+          dest: "",
+        },
       ]
     }),
   ],
