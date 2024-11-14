@@ -14,8 +14,8 @@ chrome.tabs.onUpdated.addListener((tabId, tab) => {
         console.log(" Trying avaible!");
         if (available !== "no") {
             console.log("Yes here");
-            const session = await ai.languageModel.create();
-            const result = await session.prompt(obj.text);
+            const session = await ai.summarizer.create();
+            const result = await session.summarize(obj.text);
             console.log(result);
         } else {
             console.log(" AI model is not installted! ");
