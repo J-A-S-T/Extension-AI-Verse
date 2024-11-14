@@ -16,10 +16,6 @@ export default defineConfig({
           src: "./scripts",
           dest: "",
         },
-        {
-          src: "./background",
-          dest: "",
-        },
       ]
     }),
   ],
