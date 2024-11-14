@@ -6,9 +6,20 @@ chrome.sidePanel
 
 // This is a testing code
 chrome.tabs.onUpdated.addListener((tabId, tab) => {
-    chrome.runtime.onMessage.addListener((obj, sender, receiver) => {
-        if (obj.get == "Yes") {
-            chrome.tabs.sendMessage(tabId, { get: "Yes" });
+    console.log("here i am!");
+    chrome.runtime.onMessage.addListener(async (obj, sender, receiver) => {
+        console.log("here i am!");
+        const available = (await ai.languageModel.capabilities()).available;
+        console.log(available);
+        console.log(" Trying avaible!");
+        if (available !== "no") {
+            console.log("Yes here");
+            const session = await ai.languageModel.create();
+            const result = await session.prompt(obj.text);
+            console.log(result);
+        } else {
+            console.log(" AI model is not installted! ");
+            alert("You dont have AI installed on your chrome browser!");
         }
     });
 });
