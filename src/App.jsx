@@ -15,7 +15,7 @@ function App() {
     },(response)=>{
       if (chrome.runtime.lastError) {
         console.error("Runtime error:", chrome.runtime.lastError);
-        return;
+        return false;
       }
       if (response && response.action) {
         console.log("Starting streaming!!!");
@@ -29,7 +29,6 @@ function App() {
     });
   }
 
-
   useEffect(()=>{
     const handleMessages = (message, sender, sendResponse)=>{
       if(message.action == "newChunk"){
@@ -42,7 +41,7 @@ function App() {
       }
     }
     chrome.runtime.onMessage.addListener(handleMessages);
-    
+
     return (()=>{
       chrome.runtime.onMessage.removeListener();
     })
