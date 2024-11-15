@@ -5,7 +5,7 @@ chrome.sidePanel
     .catch((error) => console.error(error));
 
 // This is a testing code
-chrome.tabs.onUpdated.addListener((tabId, tab) => {
+chrome.tabs.onActivated.addListener((tabId, tab) => {
     console.log("here i am!");
     chrome.runtime.onMessage.addListener(async (obj, sender, receiver) => {
         console.log("here i am!");

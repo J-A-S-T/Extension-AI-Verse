@@ -16,5 +16,5 @@
   "side_panel": {
     "default_path": "index.html"
   },
-  "permissions": ["storage", "scripting", "tabs", "sidePanel"]
+  "permissions": ["storage", "scripting", "tabs", "sidePanel", "activeTab"]
 }
