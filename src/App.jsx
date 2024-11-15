@@ -31,25 +31,22 @@ function App() {
 
 
   useEffect(()=>{
-    if(streamingOrNot){
-      const handleMessages = (message, sender, sendResponse)=>{
-        if(message.action == "newChunk"){
-          setNewChunk( (prev) => (prev + message.chunk));
-        } else if(message.action == "StreamingCompleted"){
-          setStreaming(false);
-        } else if(message.action == "StreamError"){
-          console.error(message.error);
-          setStreaming(false);
-        }
+    const handleMessages = (message, sender, sendResponse)=>{
+      if(message.action == "newChunk"){
+        setNewChunk( (prev) => (prev + message.chunk));
+      } else if(message.action == "StreamingCompleted"){
+        setStreaming(false);
+      } else if(message.action == "StreamError"){
+        console.error(message.error);
+        setStreaming(false);
       }
-
-      chrome.runtime.onMessage.addListener(handleMessages);
-
-      return (()=>{
-        chrome.runtime.onMessage.removeListener();
-      })
     }
-  }, [streamingOrNot]);
+    chrome.runtime.onMessage.addListener(handleMessages);
+    
+    return (()=>{
+      chrome.runtime.onMessage.removeListener();
+    })
+  }, []);
 
   return (
     <>

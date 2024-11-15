@@ -24,7 +24,7 @@ async function summaryGet(message, sendReponse) {
             let prevChunk = '';
             for await (const chunk of stream) {
                 const newChunk = chunk.startsWith(prevChunk) ? chunk.slice(prevChunk.length) : chunk;
-                console.log(" My CurrChunk is : ", newChunk);
+                // console.log(" My CurrChunk is : ", newChunk);
                 const message = {
                     action: "newChunk",
                     chunk: newChunk,
@@ -37,7 +37,7 @@ async function summaryGet(message, sendReponse) {
                 action: "StreamingCompleted",
             }
             chrome.runtime.sendMessage(streamCompleted);
-            console.log("Generated Summary : ", result);
+            // console.log("Generated Summary : ", result);
         } else {
             console.log(" AI model is not installted! ");
             sendReponse({ error: "AI Model is not installed! " });
