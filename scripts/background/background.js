@@ -1,4 +1,17 @@
 /* eslint-disable no-unused-vars */
+import checkAIapis from "./AISessionChecker.js";
+import { summarizerSession } from "./AISessions.js";
+
+
+chrome.runtime.onInstalled.addListener(() => {
+    const result = checkAIapis();
+    if (!result) {
+        console.log("Please follow this guideline to install AI model on Chrome! \nhttps://www.youtube.com/watch?v=v7mQ_eaT4Gw or You can search the same thing on Google!");
+        alert("Please follow this guideline to install AI model on Chrome! \nhttps://www.youtube.com/watch?v=v7mQ_eaT4Gw or You can search the same thing on Google!");
+    }
+});
+
+
 // This code opens chrome sidePanel
 chrome.sidePanel
     .setPanelBehavior({ openPanelOnActionClick: true })
@@ -14,35 +27,26 @@ chrome.runtime.onMessage.addListener((message, sender, sendReponse) => {
 async function summaryGet(message, sendReponse) {
     try {
         console.log("Message Recived : ", message);
-        const available = (await ai.languageModel.capabilities()).available;
-        console.log("Model availablity : ", available);
-        if (available !== "no") {
-            sendReponse({ action: "StreamingStarted" });
-            const session = await ai.summarizer.create({ type: 'key-points', format: 'markdown' });
-            const stream = await session.summarizeStreaming(message.text);
-            let result = '';
-            let prevChunk = '';
-            for await (const chunk of stream) {
-                const newChunk = chunk.startsWith(prevChunk) ? chunk.slice(prevChunk.length) : chunk;
-                console.log(" My CurrChunk is : ", newChunk);
-                const message = {
-                    action: "newChunk",
-                    chunk: newChunk,
-                }
-                chrome.runtime.sendMessage(message);
-                result += newChunk;
-                prevChunk = chunk;
+        sendReponse({ action: "StreamingStarted" });
+        const stream = await summarizerSession.summarizeStreaming(message.text);
+        let result = '';
+        let prevChunk = '';
+        for await (const chunk of stream) {
+            const newChunk = chunk.startsWith(prevChunk) ? chunk.slice(prevChunk.length) : chunk;
+            console.log(" My CurrChunk is : ", newChunk);
+            const message = {
+                action: "newChunk",
+                chunk: newChunk,
             }
-            const streamCompleted = {
-                action: "StreamingCompleted",
-            }
-            chrome.runtime.sendMessage(streamCompleted);
-            console.log("Generated Summary : ", result);
-        } else {
-            console.log(" AI model is not installted! ");
-            sendReponse({ error: "AI Model is not installed! " });
-            alert("You dont have AI installed on your chrome browser!");
+            chrome.runtime.sendMessage(message);
+            result += newChunk;
+            prevChunk = chunk;
         }
+        const streamCompleted = {
+            action: "StreamingCompleted",
+        }
+        chrome.runtime.sendMessage(streamCompleted);
+        console.log("Generated Summary : ", result);
     } catch (error) {
         console.log(" Error : ", error.message);
         sendReponse({ error: error.message });
